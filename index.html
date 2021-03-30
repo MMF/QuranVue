@@ -48,6 +48,7 @@
                         <input class="form-control form-control-lg border p-3 AyaBox"
                             v-bind:class="AyatStatus[aya.aya - 1] ? 'border-success' : 'border-danger'"
                             v-on:keydown="HandleTypeing(aya.aya, $event)"
+                            v-on:input="HandleTypeing(aya.aya, $event)"
                             v-model="UserText[aya.aya - 1]"
                         />
                         <span class="input-group-text">{{ aya.aya }}</span>
