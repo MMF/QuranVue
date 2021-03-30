@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>القرآن الكريم</title>
+        <link rel="stylesheet" href="css/bootstrap.rtl.min.css" />
+        <link rel="stylesheet" href="css/app.css" />
+    </head>
+<body>
+    <div class="container" style="margin-top: 80px" id="QuranApp">
+        <div class="card">
+            <div class="card-header bg-dark text-white fixed-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-1 d-sm-none d-md-block">
+                            سورة
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <select class="form-control" @change="SuraChanged()" v-model='CurrentSuraId' id="Sura">
+                                <option v-for="s in SuraInfo" :value="s.id">{{ s.name }}</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-md-2 d-sm-none d-md-block">
+                            <button class="btn btn-success" @click="ToggleAyat()">
+                                اظهار/اخفاء الآيات
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb50 d-block d-sm-none"></div>
+
+            <div class="card-body">
+                <div v-for="aya in CurrentSuraText" class="mb-3">
+                    <div class="AyaText" v-if="ShowAyat">{{ aya.text }}</div>
+
+                    <div class="input-group">
+                        <span class="input-group-text" @click="PlayAya(aya.aya)" id="PlayAya" title="استماع">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor" class="bi bi-file-play" viewBox="0 0 16 16">
+                                <path d="M6 10.117V5.883a.5.5 0 0 1 .757-.429l3.528 2.117a.5.5 0 0 1 0 .858l-3.528 2.117a.5.5 0 0 1-.757-.43z"/>
+                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                              </svg>
+                        </span>
+                        <input class="form-control form-control-lg border p-3 AyaBox"
+                            v-bind:class="AyatStatus[aya.aya - 1] ? 'border-success' : 'border-danger'"
+                            v-on:keydown="HandleTypeing(aya.aya, $event)"
+                            v-model="UserText[aya.aya - 1]"
+                        />
+                        <span class="input-group-text">{{ aya.aya }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+    <script src="js/vue.global.js" type="text/javascript"></script>
+    <script src="QuranJson/Sura.js" type="text/javascript"></script>
+    <script src="QuranJson/SuraText.js" type="text/javascript"></script>
+    <script src="js/QuranApp.js" type="text/javascript"></script>
+</body>
+</html>

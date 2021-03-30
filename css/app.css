@@ -1,0 +1,32 @@
+@font-face {
+    font-family: uthmani;
+    src: url('../fonts/UthmanTN1Ver10.otf');
+}
+
+body {
+    font-family: uthmani;
+    font-size: 22px;
+}
+
+.AyaBox:focus {
+    outline: none !important;
+    box-shadow: none;
+}
+
+.WrongWord {
+    text-decoration: underline;
+    color: red;
+}
+
+.form-control-lg {
+    font-size: 25px;
+}
+
+#PlayAya:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+.mb50 {
+    margin-bottom: 50px;
+}
