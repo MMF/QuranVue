@@ -1,4 +1,5 @@
-const audioPlayer = new Audio()
+const ayaPlayer = new Audio()
+const suraPlayer = new Audio()
 
 const QuranApp = {
     data() {
@@ -22,6 +23,10 @@ const QuranApp = {
     },
     methods: {
         SuraChanged: function() {
+            // stop audio
+            suraPlayer.pause()
+            ayaPlayer.pause()
+
             // show ayat
             this.CurrentSuraText = this.SuraText.filter(s => s.sura == this.CurrentSuraId)
 
@@ -70,9 +75,36 @@ const QuranApp = {
             
             // play audio
             const ayaURL = 'https://verse.mp3quran.net/arabic/maher_almuaiqly/64/' + ayaNum + '.mp3'
-            audioPlayer.pause()
-            audioPlayer.src = ayaURL
-            audioPlayer.play()
+            suraPlayer.pause()
+            ayaPlayer.pause()
+            ayaPlayer.src = ayaURL
+            ayaPlayer.play()
+        },
+        ListenToSurah: function() {
+            ayaPlayer.pause()
+
+            let currentPlayingAya = 1
+            const currentSuraLength = this.CurrentSuraText.length
+            this.PlayAyaOnSuraPlayer(currentPlayingAya)
+            const PlayAyaOnSuraPlayer = this.PlayAyaOnSuraPlayer
+
+            suraPlayer.onended = function() {
+                currentPlayingAya += 1
+                if (currentPlayingAya > currentSuraLength) {
+                    return
+                }
+
+                PlayAyaOnSuraPlayer(currentPlayingAya)
+                //suraPlayer.onended = this
+            }
+        },
+
+        PlayAyaOnSuraPlayer: function(ayaId) {
+            const ayaNum = this.CurrentSuraId.toString().padStart(3, '0') + ayaId.toString().padStart(3, '0')
+
+            const ayaURL = 'https://verse.mp3quran.net/arabic/maher_almuaiqly/64/' + ayaNum + '.mp3'
+            suraPlayer.src = ayaURL;
+            suraPlayer.play()
         }
     }
 }
