@@ -72,12 +72,14 @@ const QuranApp = {
             return true;
         },
         PlayAya: function(ayaId) {
+            this.ResetAudioPlayers();
+
+            this.CurrentPlayingAya = ayaId
+
             const ayaNum = this.CurrentSuraId.toString().padStart(3, '0') + ayaId.toString().padStart(3, '0')
             
             // play audio
             const ayaURL = 'https://verse.mp3quran.net/arabic/maher_almuaiqly/64/' + ayaNum + '.mp3'
-            suraPlayer.pause()
-            ayaPlayer.pause()
             ayaPlayer.src = ayaURL
             ayaPlayer.play()
         },
