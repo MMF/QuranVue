@@ -12,7 +12,9 @@ const QuranApp = {
             AyatStatus: [],
             ShowAyat: true,
 
-            UserText: []
+            UserText: [],
+            IsPlayingSura: false,
+            CurrentPlayingAya: 0
         }
     },
     mounted() {
@@ -24,8 +26,7 @@ const QuranApp = {
     methods: {
         SuraChanged: function() {
             // stop audio
-            suraPlayer.pause()
-            ayaPlayer.pause()
+            this.ResetAudioPlayers()
 
             // show ayat
             this.CurrentSuraText = this.SuraText.filter(s => s.sura == this.CurrentSuraId)
@@ -81,22 +82,32 @@ const QuranApp = {
             ayaPlayer.play()
         },
         ListenToSurah: function() {
+            // stop
+            if (this.IsPlayingSura) {
+                this.ResetAudioPlayers()
+                return;
+            }
+
+            this.IsPlayingSura = true
             ayaPlayer.pause()
 
-            let currentPlayingAya = 1
-            const currentSuraLength = this.CurrentSuraText.length
-            this.PlayAyaOnSuraPlayer(currentPlayingAya)
-            const PlayAyaOnSuraPlayer = this.PlayAyaOnSuraPlayer
+            // run basmalah
+            this.PlayBasmalahOnSuraPlayer()
 
-            suraPlayer.onended = function() {
-                currentPlayingAya += 1
-                if (currentPlayingAya > currentSuraLength) {
-                    return
-                }
+            this.CurrentPlayingAya = 0
 
-                PlayAyaOnSuraPlayer(currentPlayingAya)
-                //suraPlayer.onended = this
+            suraPlayer.onended = this.PlayNextAyaOnSuraPlayer
+        },
+
+        PlayNextAyaOnSuraPlayer: function() {
+            this.CurrentPlayingAya += 1
+            
+            if (this.CurrentPlayingAya > this.CurrentSuraText.length) {
+                this.IsPlayingSura = false
+                return
             }
+
+            this.PlayAyaOnSuraPlayer(this.CurrentPlayingAya)
         },
 
         PlayAyaOnSuraPlayer: function(ayaId) {
@@ -105,6 +116,18 @@ const QuranApp = {
             const ayaURL = 'https://verse.mp3quran.net/arabic/maher_almuaiqly/64/' + ayaNum + '.mp3'
             suraPlayer.src = ayaURL;
             suraPlayer.play()
+        },
+
+        PlayBasmalahOnSuraPlayer: function() {
+            this.PlayAyaOnSuraPlayer(0)
+        },
+
+        ResetAudioPlayers: function() {
+            this.IsPlayingSura = false;
+            this.CurrentPlayingAya = 0
+
+            suraPlayer.pause()
+            ayaPlayer.pause()
         }
     }
 }
